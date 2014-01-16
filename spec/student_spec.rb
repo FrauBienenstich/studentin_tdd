@@ -6,56 +6,50 @@ describe Student do
   describe "#initialize" do
 
     before(:each) do
-      @student = Student.new("Susanne", "Dewein", 1 )
+      @student = Student.new("Susanne", "Dewein" )
     end
 
-      it 'has a first_name' do
-        expect(@student.first_name).to eq("Susanne")
-      end
+    it 'has a first_name' do
+      expect(@student.first_name).to eq("Susanne")
+    end
 
-      it 'has a last_name' do
-        expect(@student.last_name).to eq("Dewein")
+    it 'has a last_name' do
+      expect(@student.last_name).to eq("Dewein")
+    end
 
-      end
-
-      it 'has an ID' do
-        expect(@student.id).to eq(1)
-      end
-
-      it 'has a full name' do
-        expect(@student.full_name).to eq("Susanne Dewein")
-      end#this method should actually be in a different block
+    it 'has a full name' do
+      expect(@student.full_name).to eq("Susanne Dewein")
+    end#this method should actually be in a different block
   end
 
-  describe "courses" do
+  describe "#persisted?" do
+
     before(:each) do
-      @student = Student.new("Susanne", "Dewein", 1)
-      @courses = []
-      @course = Course.new("Ruby")
+      @student = Student.new("Susanne", "Dewein" )
+      expect(@student.persisted?).to be_false
     end
 
-    it 'has courses' do
-
+    it 'is persisted with an id' do
+      @student.save
+      expect(@student.persisted?).to be_true
     end
 
-    it 'can join a course' do
-      @student.join_course(@course)
-      expect(@student.courses).to eq([@course])
+  end
+
+  describe "#save" do
+    before(:each) do
+      @student = Student.new("Susanne", "Dewein" )
     end
 
-    it 'can leave a course' do
-      @student.leave_course(@course)
-      expect(@student.courses).to be_empty
-    end
-
-    it 'knows all its courses' do
-
-    end
-
-    it 'cannot join more than two courses' do
+    it 'saves a non-persisted student to the DB' do
 
     end
   end
 
+  describe "#update" do
 
+    it 'updates a persisted student in the Db' do
+    end
+  end
 end
+

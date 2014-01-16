@@ -1,6 +1,6 @@
 class Student
 
-attr_accessor :first_name, :last_name, :id, :courses
+  attr_accessor :first_name, :last_name, :id, :courses
 
   def initialize(first_name, last_name)
     @first_name = first_name
@@ -13,12 +13,8 @@ attr_accessor :first_name, :last_name, :id, :courses
     "#{@first_name} #{@last_name}"
   end
 
-  def join_course(course)
-    @courses << course
-  end
-
-  def leave_course(course)
-    @courses.delete(course)
+  def persisted?
+    true if @id
   end
 
 end
