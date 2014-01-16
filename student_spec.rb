@@ -20,22 +20,26 @@ describe Student do
 
       it 'has an ID' do
         expect(@student.id).to eq(1)
-
       end
-  end
 
-  it 'has a full name' do
-    expect(@student.full_name).to eq("Susanne Dewein")
+      it 'has a full name' do
+        expect(@student.full_name).to eq("Susanne Dewein")
+      end#this method should actually be in a different block
   end
 
   describe "courses" do
+    before(:each) do
+      @student = Student.new("Susanne", "Dewein", 1)
+      @course = Course.new("Ruby")
+    end
 
     it 'has courses' do
+
     end
 
     # it 'can join a course' do
-    #   course = Course.new
     #   @student.join_course(course)
+    #   #expect student ... to have course..to be in array @courses?
     # end
 
     it 'can leave a course' do
