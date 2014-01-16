@@ -30,6 +30,7 @@ describe Student do
   describe "courses" do
     before(:each) do
       @student = Student.new("Susanne", "Dewein", 1)
+      @courses = []
       @course = Course.new("Ruby")
     end
 
@@ -37,10 +38,11 @@ describe Student do
 
     end
 
-    # it 'can join a course' do
-    #   @student.join_course(course)
-    #   #expect student ... to have course..to be in array @courses?
-    # end
+    it 'can join a course' do
+      @student.join_course(@course)
+
+      expect(@student.courses).to eq([@course])
+    end
 
     it 'can leave a course' do
     end
