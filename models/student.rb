@@ -1,6 +1,6 @@
 class Student
 
-attr_accessor :first_name, :last_name, :id, :courses, :course
+attr_accessor :first_name, :last_name, :id, :courses
 
   def initialize(first_name, last_name, id)
     @first_name = first_name
