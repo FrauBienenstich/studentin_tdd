@@ -40,11 +40,12 @@ describe Student do
 
     it 'can join a course' do
       @student.join_course(@course)
-
       expect(@student.courses).to eq([@course])
     end
 
     it 'can leave a course' do
+      @student.leave_course(@course)
+      expect(@student.courses).to be_empty
     end
 
     it 'knows all its courses' do

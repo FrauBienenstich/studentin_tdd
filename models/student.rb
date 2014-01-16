@@ -17,4 +17,8 @@ attr_accessor :first_name, :last_name, :id, :courses
     @courses << course
   end
 
+  def leave_course(course)
+    @courses.delete(course)
+  end
+
 end
