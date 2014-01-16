@@ -1,4 +1,4 @@
-require './course.rb'
+require_relative '../models/course.rb'
 describe Course do
   describe "initialize" do
     before(:each) do

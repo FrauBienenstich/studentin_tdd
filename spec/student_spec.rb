@@ -1,4 +1,4 @@
-require './student.rb'
+require_relative '../models/student.rb'
 
 
 describe Student do
