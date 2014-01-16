@@ -1,3 +1,5 @@
+require 'mysql'
+
 class Student
 
   attr_accessor :first_name, :last_name, :id, :courses
@@ -15,6 +17,19 @@ class Student
 
   def persisted?
     true if @id
+  end
+
+  def save
+    #Student.establish_db_connection()
+
+  end
+
+  def self.establish_db_connection(database_name)
+    con = Mysql.new 'localhost', 'root', ''
+    con.query("use #{database_name};")
+    con.query("CREATE TABLE IF NOT EXISTS\
+      students(id INT PRIMARY KEY AUTO_INCREMENT, first_name VARCHAR(20), last_name VARCHAR(20));")
+    con
   end
 
 end

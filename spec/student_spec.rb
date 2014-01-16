@@ -1,4 +1,5 @@
 require_relative '../models/student.rb'
+require "awesome_print"
 
 
 describe Student do
@@ -32,6 +33,13 @@ describe Student do
     it 'is persisted with an id' do
       @student.save
       expect(@student.persisted?).to be_true
+    end
+
+    it 'should save a record in the database' do
+      connection = Student.establish_db_connection("student_test")
+      expect {
+        @student.save
+      }.to change{ connection.query("SELECT * from students").num_rows }.from(0).to(1) #compares before and after method call
     end
 
   end
