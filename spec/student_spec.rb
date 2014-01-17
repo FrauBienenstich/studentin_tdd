@@ -36,10 +36,10 @@ describe Student do
     end
 
     it 'should save a record in the database' do
-      connection = Student.establish_db_connection("student_test")
+      connection = Student.establish_db_connection
       expect {
         @student.save
-      }.to change{ connection.query("SELECT * from students").num_rows }.from(0).to(1) #compares before and after method call
+      }.to change{ connection.query("SELECT * from students").num_rows }.from(0).to(1)
     end
 
   end

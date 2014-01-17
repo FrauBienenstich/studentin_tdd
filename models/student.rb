@@ -20,8 +20,10 @@ class Student
   end
 
   def save
-    #Student.establish_db_connection()
-
+    con = Student.establish_db_connection()
+    insert_statement = con.prepare("INSERT INTO students(first_name, last_name) VALUES(?, ?);")
+    insert_statement.execute @first_name, @last_name
+    self.id = con.insert_id
   end
 
   def self.establish_db_connection(database_name)
