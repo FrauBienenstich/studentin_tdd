@@ -1,8 +1,18 @@
 require_relative '../models/student.rb'
 require "awesome_print"
 
-
 describe Student do
+
+  def truncate_table
+    con = Student.establish_db_connection
+    con.query("TRUNCATE table students")
+  end
+
+
+  after(:each) do
+
+    truncate_table
+  end
 
   describe "#initialize" do
 
