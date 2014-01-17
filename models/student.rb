@@ -26,9 +26,9 @@ class Student
     self.id = con.insert_id
   end
 
-  def self.establish_db_connection(database_name)
+  def self.establish_db_connection
     con = Mysql.new 'localhost', 'root', ''
-    con.query("use #{database_name};")
+    con.query("use student_test;")
     con.query("CREATE TABLE IF NOT EXISTS\
       students(id INT PRIMARY KEY AUTO_INCREMENT, first_name VARCHAR(20), last_name VARCHAR(20));")
     con
