@@ -88,10 +88,9 @@ describe Student do
     end
 
     it 'removes a student from the database' do
-      @student.delete
-      connection = Student.establish_db_connection
-      result = connection.query("SELECT * FROM students WHERE id = #{@student.id}")
-      expect(result.num_rows).to eq(0)
+      expect {
+        @student.delete
+      }.to change{ Student.establish_db_connection.query("SELECT * FROM students WHERE id = #{@student.id}").num_rows }
     end
   end
 
