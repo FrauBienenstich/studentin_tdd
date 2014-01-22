@@ -82,7 +82,17 @@ describe Student do
   end
 
   describe '#delete' do
-    
+    before(:each) do
+      @student = Student.new("Susanne", "Dewein")
+      @student.save
+    end
+
+    it 'removes a student from the database' do
+      @student.delete
+      connection = Student.establish_db_connection
+      result = connection.query("SELECT * FROM students WHERE id = #{@student.id}")
+      expect(result.num_rows).to eq(0)
+    end
   end
 
 end

@@ -24,6 +24,12 @@ class Student
     persisted? ? update(con) : insert(con)
   end
 
+  def delete
+    con = Student.establish_db_connection
+    delete_statement = con.prepare("DELETE FROM students WHERE id = ?;")
+    delete_statement.execute @id
+  end
+
 
 protected
 
