@@ -95,5 +95,34 @@ describe Student do
     end
   end
 
+  describe '#find' do
+    before(:each) do
+      @student = Student.new("Susanne", "Dewein")
+      @student.save
+    end
+
+    it 'returns a database entry' do
+      found = Student.find(:first_name => "Sus", :last_name => "wein")
+      found[0].first_name.should == "Susanne"
+      found[0].should be_kind_of Student
+      found[0].should be_persisted
+
+      #"Select * from students where first_name like %bla% AND last_name like %foo%"
+
+      found = Student.find(:last_name => "nonexistent")
+      found.should be_empty
+      # connection = Student.establish_db_connection
+      # result = connection.query("SELECT * FROM students WHERE id = #{@student.id} ")
+      # result.each do |row|
+      #   @entry = row
+      # end
+      # puts "WHHAAA"
+      # puts @entry[1]
+      # puts @student.first_name
+      # expect(@entry[1]).to eq(@student.first_name)
+      # expect(@entry[2]).to eq(@student.last_name)
+    end
+  end
+
 end
 

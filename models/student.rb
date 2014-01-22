@@ -7,9 +7,11 @@ class Student
   def initialize(first_name, last_name)
     @first_name = first_name
     @last_name = last_name
-    @id = id
-    @courses = [] # do I need this?
   end
+
+  # def initialize(&block)
+  #   yield self
+  # end
 
   def full_name
     "#{@first_name} #{@last_name}"
@@ -28,6 +30,25 @@ class Student
     con = Student.establish_db_connection
     delete_statement = con.prepare("DELETE FROM students WHERE id = ?;")
     delete_statement.execute @id
+  end
+
+  def self.find(needle)
+    con = establish_db_connection
+    sub_expressions = []
+    needle.each do |k, v|
+      sub_expressions << "#{k.to_s} like '%#{v.to_s}%'"
+    end
+    statement = "SELECT * FROM students WHERE #{sub_expressions.join(' AND ')};"
+    result = con.query(statement)
+
+    students = []    
+    result.each do |row|
+      s =  Student.new(row[1], row[2])
+      s.id = row[0]
+      students << s
+    end
+
+    students
   end
 
 
