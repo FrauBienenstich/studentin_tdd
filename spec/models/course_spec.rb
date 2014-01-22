@@ -1,4 +1,6 @@
-require_relative '../models/course.rb'
+require_relative '../spec_helpers' 
+require_relative '../../models/course.rb'
+
 describe Course do
   describe "initialize" do
     before(:each) do

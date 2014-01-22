@@ -1,5 +1,6 @@
-require_relative '../models/student.rb'
-require "awesome_print"
+require_relative '../spec_helpers' 
+require_relative '../../models/student.rb'
+
 
 describe Student do
 
@@ -45,7 +46,7 @@ describe Student do
       expect(@student.persisted?).to be_true
     end
 
-    it 'should save a record in the database' do
+    it 'saves a record in the database' do #what is the difference between this test and the one underneath?
       connection = Student.establish_db_connection
       expect {
         @student.save
@@ -56,17 +57,25 @@ describe Student do
 
   describe "#save" do
     before(:each) do
+      connection = Student.establish_db_connection
       @student = Student.new("Susanne", "Dewein" )
     end
 
-    it 'saves a non-persisted student to the DB' do
-
-    end
+    # it 'saves a non-persisted student to the DB' do
+    #   @student.save #same as above PLUS correct entry?
+    # end
   end
 
   describe "#update" do
+    before(:each) do
+      @student = Student.new("Susanne", "Dewein" )
+    end
 
     it 'updates a persisted student in the Db' do
+      connection = Student.establish_db_connection
+      expect {
+        @student.update 
+      }.not_to change{ connection.query("SELECT * from students").num_rows }
     end
   end
 end
