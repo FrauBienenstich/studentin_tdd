@@ -34,4 +34,12 @@ class Student
     con
   end
 
+  def update
+    con = Student.establish_db_connection
+    update_statement = con.prepare("Update students SET first_name = ?, last_name = ? WHERE id = ?;")
+    update_statement.execute @first_name, @last_name, @id
+  end
+
 end
+
+Student.establish_db_connection
