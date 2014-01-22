@@ -55,28 +55,35 @@ describe Student do
 
   end
 
-  describe "#save" do
-    before(:each) do
-      connection = Student.establish_db_connection
-      @student = Student.new("Susanne", "Dewein" )
-    end
-
-    # it 'saves a non-persisted student to the DB' do
-    #   @student.save #same as above PLUS correct entry?
-    # end
-  end
-
   describe "#update" do
     before(:each) do
       @student = Student.new("Susanne", "Dewein" )
+      @student.save
+      expect(@student.id).not_to be_nil
+      @student.first_name = "Hans"
+      @student.last_name = "Wurst"
     end
 
-    it 'updates a persisted student in the Db' do
-      connection = Student.establish_db_connection
+    it 'does not add a new student to the db' do
       expect {
-        @student.update 
-      }.not_to change{ connection.query("SELECT * from students").num_rows }
+        @student.save
+      }.not_to change{ Student.establish_db_connection.query("SELECT * from students").num_rows }
+    end
+
+    it 'changes a persisted student' do
+      @student.save
+      connection = Student.establish_db_connection
+      result = connection.query("SELECT * FROM students WHERE id = #{@student.id}")
+      expect(result.num_rows).to eq(1)
+      result.each do |row|
+        expect(row.join(" ")).to match /Hans Wurst/
+      end
     end
   end
+
+  describe '#delete' do
+    
+  end
+
 end
 
