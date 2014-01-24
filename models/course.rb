@@ -1,28 +1,18 @@
-class Course
+require_relative './db_persistable.rb'
+class Course # < UniversityAdministration
 
-attr_accessor :title, :id
+
+  attr_accessor :title, :id
+  include DbPersistable
 
   def initialize(title)
     @title = title
     #@id = id --> this was actually needed before @id showed up in #peristed?
   end
 
-  def persisted?
-    true if @id
-  end
-
-  def save
-    con = Course.establish_db_connection
-    persisted? ? update(con) : insert(con)
-
-  end
 
 
-  def delete
-    con = Course.establish_db_connection
-    delete_statement = con.prepare("DELETE FROM courses WHERE id = ?;")
-    delete_statement.execute @id
-  end
+
 
   def self.find(needle)
     con = establish_db_connection
@@ -32,6 +22,7 @@ attr_accessor :title, :id
     end
 
     statement = "SELECT * FROM courses WHERE #{sub_expressions.join(' AND ')};"
+    #binding.pry
     result = con.query(statement) #sql statement
 
     courses = []

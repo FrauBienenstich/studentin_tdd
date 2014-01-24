@@ -1,6 +1,7 @@
-require 'mysql'
+require_relative './db_persistable.rb'
 
-class Student
+class Student # < UniversityAdministration
+  include DbPersistable
 
   attr_accessor :first_name, :last_name, :id, :courses
 
@@ -17,20 +18,6 @@ class Student
     "#{@first_name} #{@last_name}"
   end
 
-  def persisted?
-    true if @id
-  end
-
-  def save
-    con = Student.establish_db_connection()
-    persisted? ? update(con) : insert(con)
-  end
-
-  def delete
-    con = Student.establish_db_connection
-    delete_statement = con.prepare("DELETE FROM students WHERE id = ?;")
-    delete_statement.execute @id
-  end
 
   def self.find(needle)
     con = establish_db_connection
