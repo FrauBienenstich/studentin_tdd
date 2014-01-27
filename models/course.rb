@@ -38,13 +38,13 @@ class Course # < UniversityAdministration
 
   protected
 
-  def self.establish_db_connection
-    con = Mysql.new 'localhost', 'root', ''
-    con.query("use #{CONFIG['database']['name']};")
-    con.query("CREATE TABLE IF NOT EXISTS\
-      courses(id INT PRIMARY KEY AUTO_INCREMENT, title VARCHAR(20));")
-    con
-  end
+  # def self.establish_db_connection
+  #   con = Mysql.new 'localhost', 'root', ''
+  #   con.query("use #{CONFIG['database']['name']};")
+  #   con.query("CREATE TABLE IF NOT EXISTS\
+  #     courses(id INT PRIMARY KEY AUTO_INCREMENT, title VARCHAR(20));")
+  #   con
+  # end
 
   def insert(con)
     insert_statement = con.prepare("INSERT INTO courses(title) VALUES(?);")

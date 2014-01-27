@@ -41,13 +41,13 @@ class Student # < UniversityAdministration
 
 protected
 
-  def self.establish_db_connection
-    con = Mysql.new 'localhost', 'root', ''
-    con.query("use #{CONFIG['database']['name']};")# still only working on the testdb?
-    con.query("CREATE TABLE IF NOT EXISTS\
-      students(id INT PRIMARY KEY AUTO_INCREMENT, first_name VARCHAR(20), last_name VARCHAR(20));")
-    con
-  end
+  # def self.establish_db_connection
+  #   con = Mysql.new 'localhost', 'root', ''
+  #   con.query("use #{CONFIG['database']['name']};")# still only working on the testdb?
+  #   con.query("CREATE TABLE IF NOT EXISTS\
+  #     students(id INT PRIMARY KEY AUTO_INCREMENT, first_name VARCHAR(20), last_name VARCHAR(20));")
+  #   con
+  # end
 
   def insert(con)
     insert_statement = con.prepare("INSERT INTO students(first_name, last_name) VALUES(?, ?);")
