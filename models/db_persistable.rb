@@ -25,6 +25,35 @@ module DbPersistable
 
   module ClassMethods 
 
+    def find(needle)
+      con = establish_db_connection
+      sub_expressions = []
+      needle.each do |k, v|
+        sub_expressions << "#{k.to_s} like '%#{v.to_s}%'"
+      end
+
+      statement = "SELECT * FROM #{self.to_s.downcase}s WHERE #{sub_expressions.join(' AND ')};"
+      result = con.query(statement)
+### the stuff belwo looks ugly
+      list = []
+
+      if con.field_count == 3
+        result.each do |row|
+          instance = self.new(row[1], row[2])
+          instance.id = row[0]
+          list << instance
+        end
+      elsif con.field_count == 2
+        result.each do |row|
+        instance = self.new(row[1])
+        instance.id = row[0]
+        list << instance 
+      end
+    end
+      list
+
+    end
+
 
     def establish_db_connection
       con = Mysql.new 'localhost', 'root', ''

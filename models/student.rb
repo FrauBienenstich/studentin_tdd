@@ -19,24 +19,24 @@ class Student # < UniversityAdministration
   end
 
 
-  def self.find(needle)
-    con = establish_db_connection
-    sub_expressions = []
-    needle.each do |k, v|
-      sub_expressions << "#{k.to_s} like '%#{v.to_s}%'"
-    end
-    statement = "SELECT * FROM students WHERE #{sub_expressions.join(' AND ')};"
-    result = con.query(statement)
+  # def self.find(needle)
+  #   con = establish_db_connection
+  #   sub_expressions = []
+  #   needle.each do |k, v|
+  #     sub_expressions << "#{k.to_s} like '%#{v.to_s}%'"
+  #   end
+  #   statement = "SELECT * FROM students WHERE #{sub_expressions.join(' AND ')};"
+  #   result = con.query(statement)
 
-    students = []    
-    result.each do |row|
-      s =  Student.new(row[1], row[2])
-      s.id = row[0]
-      students << s
-    end
+  #   students = []    
+  #   result.each do |row|
+  #     s =  Student.new(row[1], row[2])
+  #     s.id = row[0]
+  #     students << s
+  #   end
 
-    students
-  end
+  #   students
+  # end
 
 
 protected
