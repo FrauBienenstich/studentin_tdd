@@ -23,6 +23,29 @@ module DbPersistable
     delete_statement.execute @id
   end
 
+  def column_values
+    @instance_variables = []
+    self.class.column_titles.each do |title|
+      @instance_variables << "@" + title
+    end
+    long_string = @instance_variables.map { |s| "#{s}" }.join(', ')
+    #will retunr sth like "@a, @b, @c"
+    # without_quotation_marks = long_string.gsub! /"/, '|'#works??
+    # without_quotation_marks
+    long_string
+  end
+
+
+  def insert(con)
+
+      insert_statement = con.prepare("INSERT INTO #{self.class.to_s.downcase}s (#{column_values}) VALUES(?);")#number values??
+      insert_statement.execute column_values
+
+
+
+      self.id = con.insert_id
+  end
+
   module ClassMethods 
 
     def find(needle)
@@ -34,7 +57,7 @@ module DbPersistable
 
       statement = "SELECT * FROM #{self.to_s.downcase}s WHERE #{sub_expressions.join(' AND ')};"
       result = con.query(statement)
-### the stuff belwo looks ugly
+      ### the stuff belwo looks ugly
       list = []
 
       if con.field_count == 3
@@ -45,30 +68,54 @@ module DbPersistable
         end
       elsif con.field_count == 2
         result.each do |row|
-        instance = self.new(row[1])
-        instance.id = row[0]
-        list << instance 
+          instance = self.new(row[1])
+          instance.id = row[0]
+          list << instance 
+        end
       end
-    end
       list
-
     end
 
 
     def establish_db_connection
       con = Mysql.new 'localhost', 'root', ''
       con.query("use #{CONFIG['database']['name']};")
-
-      if self.class == Course
-        con.query("CREATE TABLE IF NOT EXISTS\
-          #{self.class.to_s.downcase}s(id INT PRIMARY KEY AUTO_INCREMENT, title VARCHAR(20));")
-      elsif self.class == Student
-        con.query("CREATE TABLE IF NOT EXISTS\
-          #{self.class.to_s.downcase}s(id INT PRIMARY KEY AUTO_INCREMENT, first_name VARCHAR(20), last_name VARCHAR(20));")
-      end
       con
     end
 
+    def columns=(val)
+      @columns = val
+    end
+    def columns
+      @columns ||= []
+    end
+
+    def explain
+      con = establish_db_connection
+      self.columns = []
+      result = con.query("EXPLAIN #{self.to_s}s;")
+      result.each do |row|
+        self.columns << convert_to_hash(row) #Array mit column
+      end
+    end
+
+    def column_titles
+      names = []
+      self.columns.each do |column|
+        next if column[:is_key]
+        names << column[:name]
+      end
+      names
+    end
+
+    def convert_to_hash(col_info)
+      {
+        :name => col_info[0],
+        :type => col_info[1],
+        :null => (col_info[2] == "YES" ? true : false),
+        :is_key => (col_info[3] == "PRI" ? true : false)
+      }
+    end
 
   end
 end
