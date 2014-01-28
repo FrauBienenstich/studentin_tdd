@@ -46,12 +46,6 @@ class Course # < UniversityAdministration
   #   con
   # end
 
-  def insert(con)
-    insert_statement = con.prepare("INSERT INTO courses(title) VALUES(?);")
-    insert_statement.execute @title
-    self.id = con.insert_id
-  end
-
   def update(con)
     update_statement = con.prepare("UPDATE courses SET title = ? WHERE id = ?;")
     update_statement.execute @title, @id
