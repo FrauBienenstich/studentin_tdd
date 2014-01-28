@@ -44,6 +44,7 @@ describe DbPersistable do
     end
 
     it 'generates a list of column names used for insert statement' do
+      ap Dummy.column_titles
       expect(Dummy.column_titles).to eq %w{dog_name dog_age dog_color} 
     end
 
@@ -52,8 +53,32 @@ describe DbPersistable do
       susi.dog_name = "Susi"
       susi.dog_age = 3
       susi.dog_color = 2
-      expect(susi.column_values).to eq ["Susi", "3", 2]
+      expect(susi.column_values).to eq ["Susi", "3", "2"]
     end
+
+    it 'generates an array with the right amount of question marks' do
+      expect(Dummy.question_marks([1,2,3])).to eq "?, ?, ?"
+    end
+
+    it 'inserts the correct data into the db' do
+      susi = Dummy.new
+      susi.dog_name = "Susi"
+      susi.dog_age = 3
+      susi.dog_color = 2
+
+      con = Dummy.establish_db_connection
+      expect {
+        susi.insert(con)
+      }.to change{ con.query("SELECT * from dummys").num_rows}.from(0).to(1)      
+    end
+
+
+    # it 'saves a record in the database' do
+    #   connection = Course.establish_db_connection
+    #   expect {
+    #     @course.save
+    #   }.to change{ connection.query("SELECT * from courses").num_rows}.from(0).to(1)
+    # end
   end
 
 end

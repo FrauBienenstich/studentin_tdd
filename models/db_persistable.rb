@@ -7,10 +7,13 @@ module DbPersistable
     #base.class_to_create = base
   end
 
-  def persisted?
-    true if @id
+  def id
+    @id
   end
 
+  def persisted?
+    true if id
+  end
 
   def save
     con = self.class.establish_db_connection
@@ -24,27 +27,34 @@ module DbPersistable
   end
 
   def column_values
-    @instance_variables = []
+    variables = []
     self.class.column_titles.each do |title|
-      @instance_variables << "@" + title
+      variables << self.instance_variable_get("@#{title}").to_s
     end
-    long_string = @instance_variables.map { |s| "#{s}" }.join(', ')
+    ap variables
+    variables
+
+
+    #long_string = @instance_variables.map { |s| "#{s}" }.join(', ')
     #will retunr sth like "@a, @b, @c"
     # without_quotation_marks = long_string.gsub! /"/, '|'#works??
     # without_quotation_marks
-    long_string
+    #long_string
+    #should return actual values? thought just the variables that in turn get inserted into SQL statement
   end
-
 
   def insert(con)
 
-      insert_statement = con.prepare("INSERT INTO #{self.class.to_s.downcase}s (#{column_values}) VALUES(?);")#number values??
-      insert_statement.execute column_values
+    keys = self.class.column_titles
+    qm = self.class.question_marks(keys)
 
+    statement = "INSERT INTO #{self.class.to_s.downcase}s (#{keys.join(', ')}) VALUES (#{qm});"
 
+    insert_statement = con.prepare(statement)
+    insert_statement.execute  *column_values 
 
-      self.id = con.insert_id
-  end
+    @id = con.insert_id
+  end  
 
   module ClassMethods 
 
@@ -86,6 +96,7 @@ module DbPersistable
     def columns=(val)
       @columns = val
     end
+
     def columns
       @columns ||= []
     end
@@ -106,6 +117,10 @@ module DbPersistable
         names << column[:name]
       end
       names
+    end
+
+    def question_marks(array)
+      array.map { |n| "?" }.join(", ") 
     end
 
     def convert_to_hash(col_info)
