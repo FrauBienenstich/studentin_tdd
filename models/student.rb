@@ -1,49 +1,17 @@
 require_relative './db_persistable.rb'
 
-class Student # < UniversityAdministration
-  include DbPersistable
+class Student
 
   attr_accessor :first_name, :last_name, :id, :courses
+  include DbPersistable
 
   def initialize(first_name, last_name)
     @first_name = first_name
     @last_name = last_name
   end
 
-  # def initialize(&block)
-  #   yield self
-  # end
-
   def full_name
     "#{@first_name} #{@last_name}"
-  end
-
-
-  # def self.find(needle)
-  #   con = establish_db_connection
-  #   sub_expressions = []
-  #   needle.each do |k, v|
-  #     sub_expressions << "#{k.to_s} like '%#{v.to_s}%'"
-  #   end
-  #   statement = "SELECT * FROM students WHERE #{sub_expressions.join(' AND ')};"
-  #   result = con.query(statement)
-
-  #   students = []    
-  #   result.each do |row|
-  #     s =  Student.new(row[1], row[2])
-  #     s.id = row[0]
-  #     students << s
-  #   end
-
-  #   students
-  # end
-
-
-protected
-
-  def update(con)
-    update_statement = con.prepare("Update students SET first_name = ?, last_name = ? WHERE id = ?;")
-    update_statement.execute @first_name, @last_name, @id
   end
 
 end

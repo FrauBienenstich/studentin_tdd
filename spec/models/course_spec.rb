@@ -96,21 +96,21 @@ describe Course do
     end
   end
 
-  describe '#find' do
-    before(:each) do
-      @course = Course.new("Ruby")
-      @course.save
+  # describe '#find' do
+  #   before(:each) do
+  #     @course = Course.new("Ruby")
+  #     @course.save
 
-    end
-    it 'returns course from database' do
-      found = Course.find(:title => "Ruby")
-      expect(found[0].title).to eq("Ruby")
-      expect(found[0]).to be_a_kind_of Course
-      expect(found[0]).to be_persisted
+  #   end
+  #   it 'returns course from database' do
+  #     found = Course.find(:title => "Ruby")
+  #     expect(found[0].title).to eq("Ruby")
+  #     expect(found[0]).to be_a_kind_of Course
+  #     expect(found[0]).to be_persisted
 
-      found = Course.find(:title => "nonexistant")
-      expect(found).to be_empty
-    end
-  end
+  #     found = Course.find(:title => "nonexistant")
+  #     expect(found).to be_empty
+  #   end
+  # end
 
 end

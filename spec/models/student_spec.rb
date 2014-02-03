@@ -32,6 +32,13 @@ describe Student do
     it 'has a full name' do
       expect(@student.full_name).to eq("Susanne Dewein")
     end#this method should actually be in a different block
+
+    it 'explains models from database' do
+      Student.columns = []
+      expect {
+        Student.explain
+      }.to change {Student.columns.count}.by(3)
+    end
   end
 
   describe "#persisted?" do
@@ -94,22 +101,22 @@ describe Student do
     end
   end
 
-  describe '#find' do
-    before(:each) do
-      @student = Student.new("Susanne", "Dewein")
-      @student.save
-    end
+  # describe '#find' do
+  #   before(:each) do
+  #     @student = Student.new("Susanne", "Dewein")
+  #     @student.save
+  #   end
 
-    it 'returns a database entry' do
-      found = Student.find(:first_name => "Sus", :last_name => "wein")
-      found[0].first_name.should == "Susanne"
-      found[0].should be_kind_of Student
-      found[0].should be_persisted
+  #   it 'returns a database entry' do
+  #     found = Student.find(:first_name => "Sus", :last_name => "wein")
+  #     found[0].first_name.should == "Susanne"
+  #     found[0].should be_kind_of Student
+  #     found[0].should be_persisted
 
-      found = Student.find(:last_name => "nonexistent")
-      found.should be_empty
-    end
-  end
+  #     found = Student.find(:last_name => "nonexistent")
+  #     found.should be_empty
+  #   end
+  # end
 
 end
 
