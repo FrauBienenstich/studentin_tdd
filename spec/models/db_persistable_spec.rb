@@ -13,12 +13,14 @@ describe DbPersistable do
     con.query("CREATE TABLE IF NOT EXISTS dummys (id INT PRIMARY KEY AUTO_INCREMENT, dog_name VARCHAR(20), dog_age VARCHAR(20), dog_color INT);")
   end
 
-  after :all do
+  after :each do
     con = Dummy.establish_db_connection
-    con.query("DROP TABLE dummys;")
+    con.query("TRUNCATE TABLE dummys;")
   end
 
+
   it 'explains models from database' do
+    Dummy.columns = []
     expect {
       Dummy.explain
     }.to change {Dummy.columns.count}.by(4)
@@ -81,9 +83,8 @@ describe DbPersistable do
       @susi.dog_name = "Susi"
       @susi.dog_age = 3
       @susi.dog_color = 2
-      @susi.id = 1
+      @susi.save
     end
-
     
     it 'it changes a persisted entry' do
       @susi.dog_name = "Schmusi"
@@ -108,10 +109,10 @@ describe DbPersistable do
   describe "#save" do
 
     before(:each) do
-      @con = Dummy.establish_db_connection
+      # @con = Dummy.establish_db_connection
       # wieso muss ich table NOCHMAL droppen etc? habe doch before und after hook oben
-      @con.query("DROP TABLE dummys;")
-      @con.query("CREATE TABLE IF NOT EXISTS dummys (id INT PRIMARY KEY AUTO_INCREMENT, dog_name VARCHAR(20), dog_age VARCHAR(20), dog_color INT);")
+      # @con.query("DROP TABLE dummys;")
+      # @con.query("CREATE TABLE IF NOT EXISTS dummys (id INT PRIMARY KEY AUTO_INCREMENT, dog_name VARCHAR(20), dog_age VARCHAR(20), dog_color INT);")
       @susi = Dummy.new
       @susi.dog_name = "Susi"
       @susi.dog_age = 3
@@ -152,6 +153,24 @@ describe DbPersistable do
   end
 
   describe "#find" do
+    before(:each) do 
+      @susi = Dummy.new
+      @susi.dog_name = "Susi"
+      @susi.dog_age = 3
+      @susi.dog_color = 2
+      @susi.save
+    end
+
+    it 'returns a database entry' do
+      puts Dummy.establish_db_connection.query("SELECT count(*) FROM dummys").num_rows
+      found = Dummy.find(:dog_name => "Su", :dog_color => 2)
+      found[0].should be_kind_of Dummy
+      found[0].should be_persisted
+      found[0].dog_name.should == "Susi"
+
+      found = Dummy.find(:dog_name => "nonexistant")
+      found.should be_empty
+    end
 
   end
 end

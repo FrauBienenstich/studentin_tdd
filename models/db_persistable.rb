@@ -61,33 +61,70 @@ module DbPersistable
     update_statement.execute *vals
   end
 
+
   module ClassMethods 
 
-    def find(needle)
+    def with_db(&block)
       con = establish_db_connection
+      block.call(con)
+      con.close
+    end
+
+    def find(needle)
+
       sub_expressions = []
+      #             k           v
+      # needle:  {:dog_name => "Su"}
       needle.each do |k, v|
-        sub_expressions << "#{k.to_s} like '%#{v.to_s}%'"
+        #puts "the column name: #{k}"
+        #puts "our columns: #{columns.inspect}"
+
+        #[
+        #  {:name=>"id", :type=>"int(11)", :null=>false, :is_key=>true}, 
+        #  {:name=>"dog_name", :type=>"varchar(20)", :null=>true, :is_key=>false}, 
+        #  {:name=>"dog_age", :type=>"varchar(20)", :null=>true, :is_key=>false},
+        #  {:name=>"dog_color", :type=>"int(11)", :null=>true, :is_key=>false}
+        #]
+
+        #find the column info for our needle
+        colInfo = columns.find {|i| i[:name] == k.to_s}
+        #puts "the column info: #{colInfo.inspect}"
+        
+        if colInfo[:type].start_with? "int"
+          sub_expressions << "#{k.to_s} = #{v.to_s}"
+        else
+          sub_expressions << "#{k.to_s} like '%#{v.to_s}%'"
+        end
+        
       end
 
       statement = "SELECT * FROM #{self.to_s.downcase}s WHERE #{sub_expressions.join(' AND ')};"
-      result = con.query(statement)
+      puts statement
+      
+      result = nil
+      
+      with_db do |con|
+        result = con.query(statement)
+      end
+
       ### the stuff belwo looks ugly
       list = []
 
-      if con.field_count == 3
-        result.each do |row|
-          instance = self.new(row[1], row[2])
-          instance.id = row[0]
-          list << instance
+      #full column names with id
+      col_names = columns.map{ |i| i[:name] }
+
+      result.each do |row|
+        properties = Hash[*col_names.zip(row).flatten]
+        instance = new
+
+        properties.each do |k, v|
+          instance.instance_variable_set("@#{k}", v)
         end
-      elsif con.field_count == 2
-        result.each do |row|
-          instance = self.new(row[1])
-          instance.id = row[0]
-          list << instance 
-        end
+
+        puts instance.inspect
+        list << instance
       end
+
       list
     end
 
