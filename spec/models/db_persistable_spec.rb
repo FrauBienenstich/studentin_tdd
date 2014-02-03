@@ -104,63 +104,54 @@ describe DbPersistable do
     end
   end
 
-  # context "#save" do
-  #   before(:each) do
-  #     @con = Dummy.establish_db_connection
-  #     @susi = Dummy.new
-  #     @susi.dog_name = "Susi"
-  #     @susi.dog_age = 3
-  #     @susi.dog_color = 2
-  #     expect(@susi.persisted?).to be_false
 
-  #     #this SHOULD NOT be necessary!
-  #   # @con.query("DROP TABLE dummys;")
-  #   # @con.query("CREATE TABLE IF NOT EXISTS dummys (id INT PRIMARY KEY AUTO_INCREMENT, dog_name VARCHAR(20), dog_age VARCHAR(20), dog_color INT);")
-  #   end
+  describe "#save" do
 
-  #   it 'saves a record to the database' do
-  #     puts "__________________________________________________________"
-  #     connection = Dummy.establish_db_connection
-  #     result = connection.query("SELECT * from dummys")
+    before(:each) do
+      @con = Dummy.establish_db_connection
+      # wieso muss ich table NOCHMAL droppen etc? habe doch before und after hook oben
+      @con.query("DROP TABLE dummys;")
+      @con.query("CREATE TABLE IF NOT EXISTS dummys (id INT PRIMARY KEY AUTO_INCREMENT, dog_name VARCHAR(20), dog_age VARCHAR(20), dog_color INT);")
+      @susi = Dummy.new
+      @susi.dog_name = "Susi"
+      @susi.dog_age = 3
+      @susi.dog_color = 2
+      expect(@susi.persisted?).to be_false
+    end
 
-  #     result.each do |row|
-  #       puts "ROW"
-  #       puts row
-  #       puts "______"
-  #     end
+    it 'is persisted with an id' do
+      @susi.save
+      expect(@susi.persisted?).to be_true
+    end
 
-  #     expect {
-  #       @susi.save(connection)
-  #     }.to change{ connection.query("SELECT * from dummys").num_rows}.from(0).to(1)
-  #     result = connection.query("SELECT * from dummys")
+    it 'saves a record in the database' do #what is the difference between this test and the one underneath?
+      connection = Dummy.establish_db_connection
+      expect {
+        @susi.save
+      }.to change{ connection.query("SELECT * from dummys").num_rows }.from(0).to(1)
+    end
 
-  #     result.each do |row|
-  #       puts "ROW!"
-  #       puts row
-  #       puts "_____"
-  #     end
-  #   end
+  end
 
-  #   it ' does not add a new entry to the db' do
-  #     puts "does not add"
-  #     @susi.id = 3
-  #      expect {
-  #       @susi.save(@con)
-  #      }.not_to change{ @con.query("SELECT * from dummys").num_rows}.from(1).to(2)
-  #   end
+  describe "#delete" do
+    before(:each) do
+      @susi = Dummy.new
+      @susi.dog_name = "Susi"
+      @susi.dog_age = 3
+      @susi.dog_color = 2
 
-  #   it ' updates the old record' do
-  #     puts "updates"
+      @susi.save
+    end
 
-  #     @susi.dog_name = "Wauwau"
-  #     puts "and now update should be called!"
-  #     @susi.save(@con)
+    it 'removes an entry from the database' do
+      expect {
+        @susi.delete
+      }.to change{ Dummy.establish_db_connection.query("SELECT * FROM dummys WHERE id = #{@susi.id}").num_rows }
+    end
 
-  #     result = @con.query("SELECT * FROM dummys WHERE id = #{@susi.id}")
-  #     result.each do |row|
-  #       expect(row.join(" ")).to match /Wauwau 3 2/
-  #     end
-  #     expect(result.num_rows).to eq(1)
-  #   end
-  # end
+  end
+
+  describe "#find" do
+
+  end
 end

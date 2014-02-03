@@ -41,65 +41,31 @@ describe Student do
     end
   end
 
-  describe "#persisted?" do
+  # describe "#update" do
+  #   before(:each) do
+  #     @student = Student.new("Susanne", "Dewein" )
+  #     @student.save
+  #     expect(@student.id).not_to be_nil
+  #     @student.first_name = "Hans"
+  #     @student.last_name = "Wurst"
+  #   end
 
-    before(:each) do
-      @student = Student.new("Susanne", "Dewein" )
-      expect(@student.persisted?).to be_false
-    end
+  #   it 'does not add a new student to the db' do
+  #     expect {
+  #       @student.save
+  #     }.not_to change{ Student.establish_db_connection.query("SELECT * from students").num_rows }
+  #   end
 
-    it 'is persisted with an id' do
-      @student.save
-      expect(@student.persisted?).to be_true
-    end
-
-    it 'saves a record in the database' do #what is the difference between this test and the one underneath?
-      connection = Student.establish_db_connection
-      expect {
-        @student.save
-      }.to change{ connection.query("SELECT * from students").num_rows }.from(0).to(1)
-    end
-
-  end
-
-  describe "#update" do
-    before(:each) do
-      @student = Student.new("Susanne", "Dewein" )
-      @student.save
-      expect(@student.id).not_to be_nil
-      @student.first_name = "Hans"
-      @student.last_name = "Wurst"
-    end
-
-    it 'does not add a new student to the db' do
-      expect {
-        @student.save
-      }.not_to change{ Student.establish_db_connection.query("SELECT * from students").num_rows }
-    end
-
-    it 'changes a persisted student' do
-      @student.save
-      connection = Student.establish_db_connection
-      result = connection.query("SELECT * FROM students WHERE id = #{@student.id}")
-      expect(result.num_rows).to eq(1)
-      result.each do |row|
-        expect(row.join(" ")).to match /Hans Wurst/
-      end
-    end
-  end
-
-  describe '#delete' do
-    before(:each) do
-      @student = Student.new("Susanne", "Dewein")
-      @student.save
-    end
-
-    it 'removes a student from the database' do
-      expect {
-        @student.delete
-      }.to change{ Student.establish_db_connection.query("SELECT * FROM students WHERE id = #{@student.id}").num_rows }
-    end
-  end
+  #   it 'changes a persisted student' do
+  #     @student.save
+  #     connection = Student.establish_db_connection
+  #     result = connection.query("SELECT * FROM students WHERE id = #{@student.id}")
+  #     expect(result.num_rows).to eq(1)
+  #     result.each do |row|
+  #       expect(row.join(" ")).to match /Hans Wurst/
+  #     end
+  #   end
+  # end
 
   # describe '#find' do
   #   before(:each) do

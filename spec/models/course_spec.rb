@@ -32,69 +32,35 @@ describe Course do
       @course.persisted? == false
     end
 
-    it 'is persisted with an id' do
-      @course.save
-      expect(@course.persisted?).to be_true
-    end
-
   end
 
-  describe '#save' do
+  # describe '#update' do
 
-    before(:each) do
-      @course = Course.new("Ruby")
-      @course.persisted? == false
-    end
+  #   before(:each) do
+  #     @course = Course.new("Ruby")
+  #     @course.save
+  #     expect(@course.id).not_to be_nil 
+  #     @course.title = "Fuby"
+  #   end
 
-    it 'saves a record in the database' do
-      connection = Course.establish_db_connection
-      expect {
-        @course.save
-      }.to change{ connection.query("SELECT * from courses").num_rows}.from(0).to(1)
-    end
+  #   it ' does not add a new course' do
+  #     expect {
+  #       @course.save
+  #     }.not_to change{ Course.establish_db_connection.query("SELECT * from courses").num_rows}
+  #   end
 
-  end
+  #   it 'changes a persisted entry' do
+  #     @course.save
+  #     connection = Course.establish_db_connection
+  #     result = connection.query("SELECT * FROM courses WHERE id = #{@course.id}")
+  #     expect(result.num_rows).to eq(1)
+  #     result.each do |row|
+  #       expect(row.join).to match /Fuby/
+  #     end
+  #   end
 
-  describe '#update' do
+  # end
 
-    before(:each) do
-      @course = Course.new("Ruby")
-      @course.save
-      expect(@course.id).not_to be_nil 
-      @course.title = "Fuby"
-    end
-
-    it ' does not add a new course' do
-      expect {
-        @course.save
-      }.not_to change{ Course.establish_db_connection.query("SELECT * from courses").num_rows}
-    end
-
-    it 'changes a persisted entry' do
-      @course.save
-      connection = Course.establish_db_connection
-      result = connection.query("SELECT * FROM courses WHERE id = #{@course.id}")
-      expect(result.num_rows).to eq(1)
-      result.each do |row|
-        expect(row.join).to match /Fuby/
-      end
-    end
-
-  end
-
-  describe '#delete' do
-
-    before(:each) do
-      @course = Course.new("Ruby")
-      @course.save
-    end
-
-    it 'deletes a record' do
-      expect {
-        @course.delete
-      }.to change{ Course.establish_db_connection.query("SELECT * from courses").num_rows}.from(1).to(0)
-    end
-  end
 
   # describe '#find' do
   #   before(:each) do
