@@ -5,8 +5,9 @@ class Course
   attr_accessor :title, :id
   include DbPersistable
 
-  def initialize(title)
-    @title = title
+  def initialize(properties)
+    @title = properties[:title]
   end
+
 
 end
