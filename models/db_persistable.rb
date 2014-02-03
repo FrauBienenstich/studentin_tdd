@@ -4,6 +4,7 @@ module DbPersistable
 
   def self.included(base)
     base.extend(ClassMethods)
+    base.explain
     #base.class_to_create = base
   end
 
@@ -31,20 +32,10 @@ module DbPersistable
     self.class.column_titles.each do |title|
       variables << self.instance_variable_get("@#{title}").to_s
     end
-    ap variables
     variables
-
-
-    #long_string = @instance_variables.map { |s| "#{s}" }.join(', ')
-    #will retunr sth like "@a, @b, @c"
-    # without_quotation_marks = long_string.gsub! /"/, '|'#works??
-    # without_quotation_marks
-    #long_string
-    #should return actual values? thought just the variables that in turn get inserted into SQL statement
   end
 
   def insert(con)
-
     keys = self.class.column_titles
     qm = self.class.question_marks(keys)
 
@@ -54,7 +45,21 @@ module DbPersistable
     insert_statement.execute  *column_values 
 
     @id = con.insert_id
-  end  
+  end 
+
+  def update(con) #--> does not go into this method!!
+    values_to_set = []
+
+    values_to_set << self.class.column_titles.map {|title| title + " = ?"}
+    #puts self.class.column_titles#----> checkout colum_titles!!
+
+    stmt = "Update #{self.class.to_s.downcase}s SET #{values_to_set.join(", ")} WHERE id = ?;"
+
+    update_statement = con.prepare(stmt)
+    vals = column_values
+    vals << @id
+    update_statement.execute *vals
+  end
 
   module ClassMethods 
 
@@ -102,17 +107,22 @@ module DbPersistable
     end
 
     def explain
-      con = establish_db_connection
-      self.columns = []
-      result = con.query("EXPLAIN #{self.to_s}s;")
-      result.each do |row|
-        self.columns << convert_to_hash(row) #Array mit column
+      begin
+        con = establish_db_connection
+        self.columns = []
+        result = con.query("EXPLAIN #{self.to_s}s;")
+        result.each do |row|
+          self.columns << convert_to_hash(row) #Array mit column
+        end
+      rescue Mysql::Error => e
+        puts e.message
       end
     end
 
     def column_titles
       names = []
-      self.columns.each do |column|
+      self.columns.each do |column|# I dont understand what is going on here
+        #no columns????--> check explain!
         next if column[:is_key]
         names << column[:name]
       end

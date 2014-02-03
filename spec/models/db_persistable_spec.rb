@@ -5,7 +5,7 @@ describe DbPersistable do
 
   class Dummy
     include DbPersistable
-    attr_accessor :dog_name, :dog_age, :dog_color
+    attr_accessor :dog_name, :dog_age, :dog_color, :id
   end
 
   before :all do
@@ -26,7 +26,7 @@ describe DbPersistable do
 
   it 'converts explain arrays into hashes' do
     result = Dummy.convert_to_hash( ["dog_color", "int(11)", "YES", "", nil, ""])
-    ap Dummy.columns
+    #ap Dummy.columns
     #puts "DUMMY EXPLAIN"
     #puts Dummy.explain
     result.should == {
@@ -44,7 +44,7 @@ describe DbPersistable do
     end
 
     it 'generates a list of column names used for insert statement' do
-      ap Dummy.column_titles
+      #ap Dummy.column_titles
       expect(Dummy.column_titles).to eq %w{dog_name dog_age dog_color} 
     end
 
@@ -72,13 +72,95 @@ describe DbPersistable do
       }.to change{ con.query("SELECT * from dummys").num_rows}.from(0).to(1)      
     end
 
-
-    # it 'saves a record in the database' do
-    #   connection = Course.establish_db_connection
-    #   expect {
-    #     @course.save
-    #   }.to change{ connection.query("SELECT * from courses").num_rows}.from(0).to(1)
-    # end
   end
 
+  context "generate update statement" do
+    before(:each) do
+      @con = Dummy.establish_db_connection
+      @susi = Dummy.new
+      @susi.dog_name = "Susi"
+      @susi.dog_age = 3
+      @susi.dog_color = 2
+      @susi.id = 1
+    end
+
+    
+    it 'it changes a persisted entry' do
+      @susi.dog_name = "Schmusi"
+      @susi.update(@con)
+      result = @con.query("SELECT * FROM dummys WHERE id = #{@susi.id}")
+      expect(result.num_rows).to eq(1)
+      result.each do |row|
+        expect(row.join(" ")).to match /Schmusi 3 2/
+      end
+    end
+
+    it 'does not add a new entry' do
+      @susi.dog_name = "Schmusi"
+      expect {
+        @susi.update(@con)
+      }.not_to change{ Dummy.establish_db_connection.query("SELECT * from dummys").num_rows}
+
+    end
+  end
+
+  # context "#save" do
+  #   before(:each) do
+  #     @con = Dummy.establish_db_connection
+  #     @susi = Dummy.new
+  #     @susi.dog_name = "Susi"
+  #     @susi.dog_age = 3
+  #     @susi.dog_color = 2
+  #     expect(@susi.persisted?).to be_false
+
+  #     #this SHOULD NOT be necessary!
+  #   # @con.query("DROP TABLE dummys;")
+  #   # @con.query("CREATE TABLE IF NOT EXISTS dummys (id INT PRIMARY KEY AUTO_INCREMENT, dog_name VARCHAR(20), dog_age VARCHAR(20), dog_color INT);")
+  #   end
+
+  #   it 'saves a record to the database' do
+  #     puts "__________________________________________________________"
+  #     connection = Dummy.establish_db_connection
+  #     result = connection.query("SELECT * from dummys")
+
+  #     result.each do |row|
+  #       puts "ROW"
+  #       puts row
+  #       puts "______"
+  #     end
+
+  #     expect {
+  #       @susi.save(connection)
+  #     }.to change{ connection.query("SELECT * from dummys").num_rows}.from(0).to(1)
+  #     result = connection.query("SELECT * from dummys")
+
+  #     result.each do |row|
+  #       puts "ROW!"
+  #       puts row
+  #       puts "_____"
+  #     end
+  #   end
+
+  #   it ' does not add a new entry to the db' do
+  #     puts "does not add"
+  #     @susi.id = 3
+  #      expect {
+  #       @susi.save(@con)
+  #      }.not_to change{ @con.query("SELECT * from dummys").num_rows}.from(1).to(2)
+  #   end
+
+  #   it ' updates the old record' do
+  #     puts "updates"
+
+  #     @susi.dog_name = "Wauwau"
+  #     puts "and now update should be called!"
+  #     @susi.save(@con)
+
+  #     result = @con.query("SELECT * FROM dummys WHERE id = #{@susi.id}")
+  #     result.each do |row|
+  #       expect(row.join(" ")).to match /Wauwau 3 2/
+  #     end
+  #     expect(result.num_rows).to eq(1)
+  #   end
+  # end
 end
