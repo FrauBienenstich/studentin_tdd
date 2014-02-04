@@ -114,7 +114,7 @@ module DbPersistable
       col_names = columns.map{ |i| i[:name] }
 
       result.each do |row|
-        properties = Hash[*col_names.zip(row).flatten]
+        properties = Hash[*col_names.zip(row).flatten] #returns hash?
         instance = new
 
         properties.each do |k, v|
@@ -158,8 +158,7 @@ module DbPersistable
 
     def column_titles
       names = []
-      self.columns.each do |column|# I dont understand what is going on here
-        #no columns????--> check explain!
+      self.columns.each do |column|
         next if column[:is_key]
         names << column[:name]
       end
