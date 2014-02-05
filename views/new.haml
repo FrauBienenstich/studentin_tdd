@@ -1,0 +1,16 @@
+/ render form blabla
+%p The NEW Form
+
+%form{action: "/students/new", method: "post"}
+  %p 
+    First Name
+    %input{name: "student[first_name]", type: "text"}/
+  %p 
+    Last Name
+    %input{name: "student[last_name]", type: "text"}/
+  %p 
+    Courses
+    %input{name: "student[courses]", type: "text"}/
+  %p
+    %input{name: "create", type: "submit", value: "Create new student"}
+%a{href:'/'} Back
