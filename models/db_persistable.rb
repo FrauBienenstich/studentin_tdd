@@ -146,7 +146,7 @@ module DbPersistable
     end
 
     def all
-      result_set = query("select * from students")
+      result_set = query("select * from #{self.to_s.downcase}s")
       obj = convert_result_to_object(result_set)
       puts obj.inspect
       obj
