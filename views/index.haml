@@ -20,11 +20,16 @@
 
 %h4 Courses
 %table{border: "1"}
-  %tr
-    %td ID
-    %td Title
-    %td Students
-  %tr
-    %td 1
-    %td RoR
-    %td Dewein
+  %thead
+    %tr
+      %th ID
+      %th Title
+      %th Students
+  %tbody
+    - @courses.each do |course|
+      %tr
+        %td
+          = course.id
+        %td
+          = course.title
+        %td &mdash;
