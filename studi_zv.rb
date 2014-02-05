@@ -17,7 +17,7 @@ get '/students/new' do
   haml :new, :format => :html5
 end
 
-post '/students/new' do
+post '/students' do
   @student = Student.build(params[:student])
   @student.save
   redirect '/'
