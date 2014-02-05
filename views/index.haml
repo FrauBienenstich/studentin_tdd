@@ -1,27 +1,30 @@
-!!!
-%html
-  %body
-    %h4 Students
-    %table{border: "1"}
+%h4 Students
+%table{border: "1"}
+  %thead
+    %tr
+      %th ID
+      %th First Name
+      %th Last Name
+      %th Courses
+  %tbody
+    - @students.each do |student|
       %tr
-        %td ID
-        %td First Name
-        %td Last Name
-        %td Courses
-      %tr
-        %td 1
-        %td Susanne
-        %td Dewein
-        %td Asdf
+        %td
+          = student.id
+        %td
+          = student.first_name
+        %td
+          = student.last_name
+        %td &mdash;
 
 
-    %h4 Courses
-    %table{border: "1"}
-      %tr
-        %td ID
-        %td Title
-        %td Students
-      %tr
-        %td 1
-        %td RoR
-        %td Dewein
+%h4 Courses
+%table{border: "1"}
+  %tr
+    %td ID
+    %td Title
+    %td Students
+  %tr
+    %td 1
+    %td RoR
+    %td Dewein
