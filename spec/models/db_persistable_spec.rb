@@ -172,5 +172,29 @@ describe DbPersistable do
       found.should be_empty
     end
 
+    # describe "all" do
+    #   before :each do
+    #     @susi_1 = Dummy.new
+    #     @susi_1.dog_name = "Susi"
+    #     @susi_1.dog_age = 3
+    #     @susi_1.dog_color = 2
+
+    #     @susi_2 = Dummy.new
+    #     @susi_2.dog_name = "Wauzi"
+    #     @susi_2.dog_age = 2
+    #     @susi_2.dog_color = 1
+
+    #     @susi_2.save
+    #     @susi_1.save
+    #   end
+
+    #   it 'returns a list of all instances' do
+    #     susis = Dummy.all
+
+    #     expect(susis).to include @susi_1
+    #     expect(susis).to include @susi_2
+    #   end
+    # end
+
   end
 end

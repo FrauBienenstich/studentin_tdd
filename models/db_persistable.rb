@@ -106,17 +106,21 @@ module DbPersistable
         end
         
       end
-
       statement = "SELECT * FROM #{self.to_s.downcase}s WHERE #{sub_expressions.join(' AND ')};"
-      puts statement
-      
+      result = query(statement)
+      convert_result_to_object(result)
+    end
+
+    def query(statement)
       result = nil
       
       with_db do |con|
         result = con.query(statement)
       end
+      result
+    end
 
-      ### the stuff belwo looks ugly
+    def convert_result_to_object(result)
       list = []
 
       #full column names with id
@@ -132,9 +136,20 @@ module DbPersistable
 
         puts instance.inspect
         list << instance
-      end
 
+        # this is what it actually means
+        # properties = {:name => "value"}
+        # @student #instance
+        # @student.@name = properties[:name]
+      end
       list
+    end
+
+    def all
+      result_set = query("select * from students")
+      obj = convert_result_to_object(result_set)
+      puts obj.inspect
+      obj
     end
 
 
