@@ -11,6 +11,24 @@ get '/' do
   haml :index, :format => :html5
 end
 
+get '/students/new' do
+  @student = Student.new
+  @course = Course.new
+  haml :new, :format => :html5
+end
+
+post '/students/new' do
+  @student = Student.build(params[:student])
+  @student.save
+  redirect '/'
+end
+
+# post '/courses/new' do
+#   @course = Course.build(params[:course])
+#   @course.save
+#   redirect '/'
+# end
+
 # index => GET /students          - zeige liste
 # show => GET /students/:id       - zeige details
 # edit => GET /students/:id/edit  - show edit form
