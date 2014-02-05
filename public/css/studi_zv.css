@@ -1,8 +1,37 @@
 body {
   margin: 0;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: Palatino, serif;
   font-size: 14px;
   line-height: 20px;
   color: #333333;
-  background-color: #FF9966;
+  background-color: DarkCyan;
+  color: white;
+  padding: 20px;
+  margin: 20px;
+}
+
+h1 {
+  color: white;
+}
+
+td {
+  color: black;
+}
+
+a:link {
+  color: orange;
+}
+
+a:visited {
+  color: yellow;
+}
+
+table {
+  border: 1px solid black;
+  border-collapse:collapse;
+  width: 90%;
+}
+
+th {
+  height: 50:;
 }
