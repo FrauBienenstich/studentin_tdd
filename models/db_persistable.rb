@@ -64,6 +64,15 @@ module DbPersistable
 
   module ClassMethods 
 
+    def build(properties)
+      instance = new
+      properties.each do |k, v|
+        # call the setter method
+        instance.send("#{k}=", v)
+      end
+      instance
+    end
+
     def with_db(&block)
       con = establish_db_connection
       block.call(con)

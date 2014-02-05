@@ -16,7 +16,7 @@ describe Course do
   describe "initialize" do
 
     before(:each) do
-      @course = Course.new(:title => "Ruby")
+      @course = Course.build(:title => "Ruby")
     end
 
     it "has a title" do
@@ -28,7 +28,7 @@ describe Course do
   describe "#persisted?" do
 
     before(:each) do
-      @course = Course.new(:title => "Ruby")
+      @course = Course.build(:title => "Ruby")
       @course.persisted? == false
     end
 

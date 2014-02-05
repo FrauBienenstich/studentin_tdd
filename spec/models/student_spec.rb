@@ -18,7 +18,7 @@ describe Student do
   describe "#initialize" do
 
     before(:each) do
-      @student = Student.new(:first_name => "Susanne", :last_name => "Dewein" )
+      @student = Student.build(:first_name => "Susanne", :last_name => "Dewein" )
     end
 
     it 'has a first_name' do
