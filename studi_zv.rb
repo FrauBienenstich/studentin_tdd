@@ -30,10 +30,11 @@ delete '/students/:id' do
   redirect '/'
 end
 
-# get '/students/:id' do
-#   @student = Student.get(params[:id])
-#   haml :show, :format => :html5
-# end
+get '/students/:id' do
+  @student = Student.find(:id => params[:id])
+
+  haml :show, :format => :html5
+end
 
 # post '/courses/new' do
 #   @course = Course.build(params[:course])
