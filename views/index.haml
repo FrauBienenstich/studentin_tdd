@@ -6,6 +6,7 @@
       %th First Name
       %th Last Name
       %th Courses
+      %th 
   %tbody
     - @students.each do |student|
       %tr
@@ -16,6 +17,11 @@
         %td
           = student.last_name
         %td &mdash;
+        %td#delete 
+          %form{action: "/students/#{student.id}", method: "post"}
+            %input{name: "_method", type: "hidden", value: "delete"}/
+            %button{type: "submit"} x 
+            / weird sinanatra and also rails thing: having to use a form here to be able to delete!!
 %a{href:'/students/new'} Want to add a new student?
 
 

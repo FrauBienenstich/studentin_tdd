@@ -21,7 +21,7 @@ module DbPersistable
     persisted? ? update(con) : insert(con)
   end
 
-  def delete
+  def destroy
     con = self.class.establish_db_connection
     delete_statement = con.prepare("DELETE FROM #{self.class.to_s.downcase}s WHERE id = ?;")
     delete_statement.execute @id

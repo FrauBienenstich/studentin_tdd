@@ -35,3 +35,7 @@ table {
 th {
   height: 50:;
 }
+#delete {
+  color: black;
+  text-align: center;
+}

@@ -23,6 +23,18 @@ post '/students' do
   redirect '/'
 end
 
+delete '/students/:id' do
+  puts params.inspect
+  students = Student.find(:id => params[:id]) #has to be a hash!, returns array with objects
+  students[0].destroy unless students.length == 0 # do not delete array but object in it!
+  redirect '/'
+end
+
+# get '/students/:id' do
+#   @student = Student.get(params[:id])
+#   haml :show, :format => :html5
+# end
+
 # post '/courses/new' do
 #   @course = Course.build(params[:course])
 #   @course.save

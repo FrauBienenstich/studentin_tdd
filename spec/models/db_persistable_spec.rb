@@ -134,7 +134,7 @@ describe DbPersistable do
 
   end
 
-  describe "#delete" do
+  describe "#destroy" do
     before(:each) do
       @susi = Dummy.new
       @susi.dog_name = "Susi"
@@ -146,7 +146,7 @@ describe DbPersistable do
 
     it 'removes an entry from the database' do
       expect {
-        @susi.delete
+        @susi.destroy
       }.to change{ Dummy.establish_db_connection.query("SELECT * FROM dummys WHERE id = #{@susi.id}").num_rows }
     end
 
