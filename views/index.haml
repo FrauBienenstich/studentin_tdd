@@ -11,11 +11,15 @@
     - @students.each do |student|
       %tr
         %td
-          = student.id
+          - url = "/students/#{student.id}"
+          %a{href: url} 
+            = student.id
         %td
-          = student.first_name
+          %a{href: url}
+            = student.first_name
         %td
-          = student.last_name
+          %a{href: url}
+            = student.last_name
         %td &mdash;
         %td#delete 
           %form{action: "/students/#{student.id}", method: "post"}
