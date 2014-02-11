@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   font-family: Palatino, serif;
@@ -9,6 +13,32 @@ body {
   padding: 20px;
   margin: 20px;
 }
+
+#header {
+  overflow: hidden;
+  position: relative;
+}
+
+#header div {
+  border: 1px solid red;
+  display: inline-block;
+  width: 33.33333%;
+  float: left;
+  
+}
+
+#header .blue {
+  border: 1px solid blue;
+}
+
+#header div .foo {
+  background-color: green;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: 5px;
+}
+
 
 h1 {
   color: white;
@@ -26,6 +56,10 @@ a:visited {
   color: yellow;
 }
 
+a:hover {
+  color: red;
+}
+
 table {
   border: 1px solid black;
   border-collapse:collapse;
@@ -35,7 +69,8 @@ table {
 th {
   height: 50:;
 }
-#delete {
-  color: black;
-  text-align: center;
+td.user-actions form {
+  /*color: black;*/
+  /*text-align: center;*/
+  display: inline-block;
 }
