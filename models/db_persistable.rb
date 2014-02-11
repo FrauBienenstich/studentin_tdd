@@ -61,15 +61,18 @@ module DbPersistable
     update_statement.execute *vals
   end
 
+  def update_attributes(properties) # nochmal anschauen, wird in update action aufgerufen
+    properties.each do |k, v|
+      # call the setter method
+      send("#{k}=", v)
+    end
+  end
 
   module ClassMethods 
 
     def build(properties)
       instance = new
-      properties.each do |k, v|
-        # call the setter method
-        instance.send("#{k}=", v)
-      end
+      instance.update_attributes(properties)
       instance
     end
 
