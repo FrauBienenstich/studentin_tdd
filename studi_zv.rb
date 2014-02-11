@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'haml'
+require 'active_support/all'
 
 require_relative 'config/environment'
 require_relative 'models/student'
@@ -11,9 +12,25 @@ get '/' do
   haml :index, :format => :html5
 end
 
-get '/students/new' do
-  @student = Student.new
-  @course = Course.new
+get "/:model/new" do # students vs courses? check new form
+  @model_name = params[:model].downcase.singularize #zb course
+  @klass = @model_name.camelcase.constantize #Course
+  @instance = @klass.new #Course.new
+
+
+  # fallse nich kapierst:
+  # case params[:model].downcase
+  # when "student"
+  #   puts "Student"
+  #   @student = Student.new
+  # when "course"
+  #   puts "Course"
+  #   @course = Course.new
+  # end
+
+  # params[:model]
+  # @student = Student.new
+  # @course = Course.new
   haml :new, :format => :html5
 end
 

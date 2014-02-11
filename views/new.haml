@@ -1,16 +1,22 @@
 / render form blabla
 %p The NEW Form
 
-%form{action: "/students", method: "post"}
-  %p 
-    First Name
-    %input{name: "student[first_name]", type: "text"}/
-  %p 
-    Last Name
-    %input{name: "student[last_name]", type: "text"}/
-  %p 
-    Courses
-    %input{name: "student[courses]", type: "text"}/
+%form{action: "/#{@model_name.pluralize}", method: "post"}
+  - @klass.columns.each do |col|
+    - next if col[:is_key]
+    /= col.inspect
+    %p 
+      = col[:name].humanize
+      %input{name: "#{@model_name}[#{col[:name]}]", type: "text", :value => @instance.send(col[:name])}/
+  / %p 
+  /   First Name
+  /   %input{name: "student[first_name]", type: "text"}/
+  / %p 
+  /   Last Name
+  /   %input{name: "student[last_name]", type: "text"}/
+  / %p 
+  /   Courses
+  /   %input{name: "student[courses]", type: "text"}/
   %p
-    %input{name: "create", type: "submit", value: "Create new student"}
+    %input{name: "create", type: "submit", value: "Create new #{@model_name}"}
 %a{href:'/'} Back
