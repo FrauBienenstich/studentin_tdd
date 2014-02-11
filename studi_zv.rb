@@ -36,6 +36,12 @@ get '/students/:id' do
   haml :show, :format => :html5
 end
 
+get '/students/:id/edit' do
+  students = Student.find(:id => params[:id])
+  @student = students[0]
+
+  haml :edit, :format => :html5
+end
 # post '/courses/new' do
 #   @course = Course.build(params[:course])
 #   @course.save

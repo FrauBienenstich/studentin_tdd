@@ -1,0 +1,15 @@
+%p EDIT
+%form{action: "/students/#{@student.id}", method: "post"}
+  %input{name: "_method", type: "hidden", value: "put"}/
+  %p 
+    First Name
+    %input{name: "student[first_name]", type: "text", value: @student.first_name}
+  %p 
+    Last Name
+    %input{name: "student[last_name]", type: "text", value: @student.last_name}/
+  %p 
+    Courses
+    %input{name: "student[courses]", type: "text"}/
+  %p
+    %input{name: "update", type: "submit", value: "Update"}
+%a{href:'/'} Back
