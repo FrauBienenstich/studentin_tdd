@@ -49,11 +49,21 @@ end
 #   redirect '/'
 # end
 
-delete '/students/:id' do
-  students = Student.find(:id => params[:id]) #has to be a hash!, returns array with objects
-  students[0].destroy unless students.length == 0 # do not delete array but object in it!
+
+delete '/:model/:id' do
+  @model_name = params[:model].downcase.singularize
+  @klass = @model_name.camelcase.constantize
+
+  entries = @klass.find(:id => params[:id])
+  entries[0].destroy unless entries.length == 0
   redirect '/'
 end
+
+# delete '/students/:id' do
+#   students = Student.find(:id => params[:id]) #has to be a hash!, returns array with objects
+#   students[0].destroy unless students.length == 0 # do not delete array but object in it!
+#   redirect '/'
+# end
 
 get '/students/:id' do
   @student = Student.find(:id => params[:id])
