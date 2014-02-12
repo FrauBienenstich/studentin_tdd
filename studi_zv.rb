@@ -34,11 +34,20 @@ get "/:model/new" do # students vs courses? check new form
   haml :new, :format => :html5
 end
 
-post '/students' do
-  @student = Student.build(params[:student])
-  @student.save
+post "/:model" do
+  @model_name = params[:model].downcase.singularize
+  @klass = @model_name.camelcase.constantize
+
+  @instance = @klass.build(params[@model_name])# hash with indifferent access, nochmal anschauen
+  @instance.save
   redirect '/'
 end
+
+# post '/students' do
+#   @student = Student.build(params[:student])
+#   @student.save
+#   redirect '/'
+# end
 
 delete '/students/:id' do
   students = Student.find(:id => params[:id]) #has to be a hash!, returns array with objects
