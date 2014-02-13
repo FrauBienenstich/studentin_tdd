@@ -1,15 +1,12 @@
 %p EDIT
-%form{action: "/students/#{@student.id}", method: "post"}
-  %input{name: "_method", type: "hidden", value: "put"}/
-  %p 
-    First Name
-    %input{name: "student[first_name]", type: "text", value: @student.first_name}
-  %p 
-    Last Name
-    %input{name: "student[last_name]", type: "text", value: @student.last_name}/
-  %p 
-    Courses
-    %input{name: "student[courses]", type: "text"}/
+%form{action: "/#{@model_name.pluralize}/#{@instance.id}", method: "post"}
+  %input{name: "_method", type: "hidden", value: "put"}
+    - @klass.columns.each do |col|
+      - next if col[:is_key]
+      %p 
+        = col[:name].humanize
+        %input{name: "#{@model_name}[#{col[:name]}]", type: "text", value: @instance.send(col[:name])}
   %p
-    %input{name: "update", type: "submit", value: "Update"}
-%a{href:'/'} Back
+  %input{name: "update", type: "submit", value: "Update"}
+  %p
+  %a{href:'/'} Back

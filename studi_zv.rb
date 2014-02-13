@@ -70,20 +70,49 @@ get '/students/:id' do
   haml :show, :format => :html5
 end
 
-get '/students/:id/edit' do
-  students = Student.find(:id => params[:id])
-  @student = students[0]
+# get '/students/:id' do
+#   @student = Student.find(:id => params[:id]) 
+#   haml :show, :format => :html5
+# end
+
+get '/:model/:id/edit' do
+  @model_name = params[:model].downcase.singularize #TODO tbc
+  @klass = @model_name.camelcase.constantize
+
+  list = @klass.find(:id => params[:id])
+  @instance = list[0]
 
   haml :edit, :format => :html5
 end
 
-put '/students/:id' do
-  students = Student.find(:id => params[:id])
-  @student = students[0]
-  @student.update_attributes(params[:student])
-  @student.save
+# get '/students/:id/edit' do
+#   students = Student.find(:id => params[:id])
+#   @student = students[0]
+
+#   haml :edit, :format => :html5
+# end
+
+put '/:model/:id' do
+  @model_name = params[:model].downcase.singularize
+  @klass = @model_name.camelcase.constantize
+
+  list = @klass.find(:id => params[:id])
+  @instance = list[0]
+  @instance.update_attributes(params[@model_name])
+  @instance.save
   redirect '/'
 end
+
+
+# put '/students/:id' do
+#   students = Student.find(:id => params[:id])
+#   @student = students[0]
+#   @student.update_attributes(params[:student])
+#   @student.save
+#   redirect '/'
+# end
+
+
 
 # post '/courses/new' do
 #   @course = Course.build(params[:course])
