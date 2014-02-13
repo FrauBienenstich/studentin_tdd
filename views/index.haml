@@ -39,12 +39,20 @@
       %th ID
       %th Title
       %th Students
+      %th 
   %tbody
     - @courses.each do |course|
       %tr
         %td
+          - url = "/courses/#{course.id}"
           = course.id
         %td
           = course.title
         %td &mdash;
+        %td.user-actions
+          %form{action: url, method: "post"}
+            %input{name: "_method", type: "hidden", value: "delete"}/
+            %button{type: "submit"} x
+          %a{href: "/courses/#{course.id}/edit"} 
+            Edit
 %a{href:'/courses/new'} Want to add a new course?
