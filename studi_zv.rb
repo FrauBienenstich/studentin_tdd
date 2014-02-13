@@ -12,25 +12,11 @@ get '/' do
   haml :index, :format => :html5
 end
 
-get "/:model/new" do # students vs courses? check new form
+get "/:model/new" do 
   @model_name = params[:model].downcase.singularize #zb course
   @klass = @model_name.camelcase.constantize #Course
   @instance = @klass.new #Course.new
 
-
-  # fallse nich kapierst:
-  # case params[:model].downcase
-  # when "student"
-  #   puts "Student"
-  #   @student = Student.new
-  # when "course"
-  #   puts "Course"
-  #   @course = Course.new
-  # end
-
-  # params[:model]
-  # @student = Student.new
-  # @course = Course.new
   haml :new, :format => :html5
 end
 
@@ -43,27 +29,14 @@ post "/:model" do
   redirect '/'
 end
 
-# post '/students' do
-#   @student = Student.build(params[:student])
-#   @student.save
-#   redirect '/'
-# end
-
-
 delete '/:model/:id' do
   @model_name = params[:model].downcase.singularize
   @klass = @model_name.camelcase.constantize
 
-  entries = @klass.find(:id => params[:id])
-  entries[0].destroy unless entries.length == 0
+  entries = @klass.find(:id => params[:id]) #has to be a hash!, returns array with objects
+  entries[0].destroy unless entries.length == 0 # do not delete array but object in it!
   redirect '/'
 end
-
-# delete '/students/:id' do
-#   students = Student.find(:id => params[:id]) #has to be a hash!, returns array with objects
-#   students[0].destroy unless students.length == 0 # do not delete array but object in it!
-#   redirect '/'
-# end
 
 get '/:model/:id' do
   @model_name = params[:model].downcase.singularize #TODO tbc
@@ -71,15 +44,8 @@ get '/:model/:id' do
 
   list = @klass.find(:id => params[:id])
   @instance = list[0]
-  puts @instance
-  puts "LIST!!! #{list.inspect}"
   haml :show, :format => :html5
 end
-
-# get '/students/:id' do
-#   @student = Student.find(:id => params[:id]) 
-#   haml :show, :format => :html5
-# end
 
 get '/:model/:id/edit' do
   @model_name = params[:model].downcase.singularize
@@ -91,13 +57,6 @@ get '/:model/:id/edit' do
   haml :edit, :format => :html5
 end
 
-# get '/students/:id/edit' do
-#   students = Student.find(:id => params[:id])
-#   @student = students[0]
-
-#   haml :edit, :format => :html5
-# end
-
 put '/:model/:id' do
   @model_name = params[:model].downcase.singularize
   @klass = @model_name.camelcase.constantize
@@ -108,23 +67,6 @@ put '/:model/:id' do
   @instance.save
   redirect '/'
 end
-
-
-# put '/students/:id' do
-#   students = Student.find(:id => params[:id])
-#   @student = students[0]
-#   @student.update_attributes(params[:student])
-#   @student.save
-#   redirect '/'
-# end
-
-
-
-# post '/courses/new' do
-#   @course = Course.build(params[:course])
-#   @course.save
-#   redirect '/'
-# end
 
 # index => GET /students          - zeige liste
 # show => GET /students/:id       - zeige details
