@@ -65,8 +65,14 @@ end
 #   redirect '/'
 # end
 
-get '/students/:id' do
-  @student = Student.find(:id => params[:id])
+get '/:model/:id' do
+  @model_name = params[:model].downcase.singularize #TODO tbc
+  @klass = @model_name.camelcase.constantize
+
+  list = @klass.find(:id => params[:id])
+  @instance = list[0]
+  puts @instance
+  puts "LIST!!! #{list.inspect}"
   haml :show, :format => :html5
 end
 
@@ -76,7 +82,7 @@ end
 # end
 
 get '/:model/:id/edit' do
-  @model_name = params[:model].downcase.singularize #TODO tbc
+  @model_name = params[:model].downcase.singularize
   @klass = @model_name.camelcase.constantize
 
   list = @klass.find(:id => params[:id])
